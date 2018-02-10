@@ -1,0 +1,7 @@
+PREFACE
+Programmer: Jack Wang
+Date Last Modified: 2/6/2018
+Course: CS 433
+Assignment: 1
+
+FUNCTIONALITY

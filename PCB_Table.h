@@ -2,23 +2,20 @@
 #ifndef PCB_Table_H
 #define PCB_Table_H
 
+#include <iostream>
 #include <vector>
 using namespace std;
 #include "PCB.h"
-
 
 class PCB_Table {
 private:
 	vector<PCB*> table;
 public:
-	PCB_Table();
+	bool newProcess(long id, int priority, long counter);
+	PCB* getProcess(long id);
+	bool endProcess(long id);
 
-	PCB* findProcess(long ID);
-
-
-	void listByID();
-	void listByState();
-	void listByPriority();
+	void listAllProcesses();
 };
 
 #endif // !PCB_Table_H
