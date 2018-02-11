@@ -6,35 +6,44 @@ using namespace std;
 
 //Default constructor
 ReadyQueue::ReadyQueue() {
-	currentLevel = 0;
-	widthSpanned = 0;
+	runningProcess = NULL;
 }
 
 //Returns the process with the highest priority. 
 PCB* ReadyQueue::removeHighestProc() {
+	//Check that the Queue is not empty.
+	if (Queue.size() == 0) {
+		return NULL;
+	}
 	//Only one running process is allowed at a time.
+	if (runningProcess != NULL) {
+		runningProcess->setState(State::WAITING);
+	}
+	//The Queue is designed so that if multiple processes have equal priority, these processes will be returned in order of insertion.
 	runningProcess = Queue.front();
+	Queue.erase(Queue.begin());
 	runningProcess->setState(State::RUNNING);
 	return runningProcess;
 }
 
 //Inserts a new process into the Queue, with priority determining the process's index position.
-void ReadyQueue::insertProc(PCB* p) {
-	if (p != NULL && p.getState() == State::READY){
+bool ReadyQueue::insertProc(PCB* p) {
+	//Check that p is not NULL and is in the READY state.
+	if (p != NULL && p->getState() == State::READY) {
 		Queue.push_back(p);
-		int location = size() - 1;	//stores p's current location in the Queue
+		int location = Queue.size() - 1;	//stores p's current location in the Queue
 		int parent;
 		PCB* temp;	//stores the process to be switched with p, if p's priority is greater
 
-		//While loop places p into the proper level of the Queue.
-		while (true) {
+		//While loop places p into the proper level of the Queue, loop continues as long as p is not at the root.
+		while (location != 0) {
 			//Determining p's current parent node.
 			parent = location / 2;
 			if (location % 2 == 0) {
 				parent--;
 			}
-			//If p has a lower or equal priority than its parent, then it is in the correct level.
-			if (Queue[parent]->getPriority() >= Queue[location]->getPriority()) {
+			//If p has lower or equal priority compared to its parent, then it is in the correct level.
+			if (Queue[parent]->getPriority() <= Queue[location]->getPriority()) {	//Lower priority value means that the process has a higher priority.
 				break;
 			}
 			//Switching the positions of p and its parent.
@@ -43,7 +52,9 @@ void ReadyQueue::insertProc(PCB* p) {
 			Queue[location] = temp;
 			location = parent;
 		}
+		return true;
 	}
+	return false;
 }
 
 //Gives the current number of processes in the ReadyQueue.
@@ -53,10 +64,17 @@ int ReadyQueue::size() {
 
 //Prints the ID, priority, and program counter of every process in the ReadyQueue.
 void ReadyQueue::displayQueue() {
-	cout << setw(12) << "Process ID" << setw(10) << "State" << setw(10) << "Priority" << setw(12) << "Counter" << endl;
-	cout << "-------------------------------------------------------------------------------------" << endl;
-	for (int i = 0; i < Queue.size(); i++) {
-		Queue[i]->print();
+	//Prints an error message if no processes are in the ReadyQueue.
+	if (Queue.size() == 0) {
+		cout << "No processes are in the ReadyQueue." << endl;
+	}
+	else {
+		cout << setw(12) << "Process ID" << setw(12) << "State" << setw(12) << "Priority" << setw(12) << "Counter" << endl;
+		cout << "=====================================================================================" << endl;
+		//For loop prints all processes.
+		for (int i = 0; i < Queue.size(); i++) {
+			Queue[i]->print();
+		}
 	}
 }
 

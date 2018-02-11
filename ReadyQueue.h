@@ -13,15 +13,13 @@ private:
 	vector<PCB*> Queue;
 	PCB* runningProcess;
 
-	int currentLevel;	//the current number of vertical levels in the heap
-	int widthSpanned;	//the number of leaves occupied by processes
-
 public:
 	ReadyQueue();
 	PCB* removeHighestProc();
-	void insertProc(PCB* p);
+	bool insertProc(PCB* p);
 	int size();
 	void displayQueue();
+
 };
 
 #endif // !ReadyQueue_H

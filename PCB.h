@@ -2,6 +2,7 @@
 #ifndef PCB_H
 #define PCB_H
 
+#include <string>
 #include <iomanip>
 #include <iostream>
 using namespace std;
@@ -16,8 +17,6 @@ protected:
 	State state;	//current state, starts as NEW and ends as TERMINATED
 	int priority;	//priority for execution
 	long counter;	//address of the process's next instruction or a memory block containing the process's instructions
-
-	static long IDgenerator;
 
 	// may also have other attributes, such as CPU Registers, Memory-management information, I/O status information, etc. 
 	// For purposes of simplicity, these other attributes will not be accounted for here
@@ -34,9 +33,9 @@ public:
 	void setCounter(long count);
 
 	void terminate();
-
 	State getState();
 	bool setState(State s);
+	string printState();
 
 	void print();
 };

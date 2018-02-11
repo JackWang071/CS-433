@@ -4,14 +4,10 @@
 using namespace std;
 #include "PCB.h"
 
-//Automatically gives a new process a unique ID.
-long PCB::IDgenerator = 1000;
-
 //Default constructor
 PCB::PCB() {
 	state = State::NEW;
-	IDgenerator++;
-	ID = IDgenerator;
+	ID = -1;
 	priority = -1;
 	counter = -1;
 }
@@ -19,8 +15,7 @@ PCB::PCB() {
 //Constructs a PCB with the given parameters for ID, priority, and program counter.
 PCB::PCB(long id, int prior, long count) {
 	state = State::NEW;
-	IDgenerator++;
-	ID = IDgenerator;
+	ID = id;
 	priority = prior;
 	counter = count;
 }
@@ -58,7 +53,6 @@ State PCB::getState() {
 
 //Modifier for the process state.
 bool PCB::setState(State s) {
-	
 	//Check that the process has not already been terminated.
 	if (state != State::TERMINATED) {
 		//If the state is to be set to READY, check whether ID, counter, and priority all have valid values.
@@ -77,8 +71,22 @@ bool PCB::setState(State s) {
 	return false;
 }
 
+//Returns the process state in string form.
+string PCB::printState() {
+	string str_state;
+	//Switch sets the value of str_s depending on the State that s represents.
+	switch (state) {
+	case State::NEW: str_state = "NEW"; break;
+	case State::READY: str_state = "READY"; break;
+	case State::RUNNING: str_state = "RUNNING"; break;
+	case State::WAITING: str_state = "WAITING"; break;
+	case State::TERMINATED: str_state = "TERMINATED"; break;
+	}
+	return str_state;
+}
+
 //Prints the process's ID, current state, priority, and next instruction address.
 void PCB::print() {
-	cout << setw(12) << ID << setw(10) << state << setw(10) << priority << setw(12) << counter << endl;
+	cout << setw(12) << ID << setw(12) << printState() << setw(12) << priority << setw(12) << counter << endl;
 }
 #endif // !PCB_C

@@ -4,6 +4,9 @@
 using namespace std;
 #include "PCB_Table.h"
 
+//Default constructor
+PCB_Table::PCB_Table() {}
+
 //Starts a new process with the given parameters.
 bool PCB_Table::newProcess(long id, int priority, long counter) {
 	//For loop checks if the PCB table contains another process with the same ID.
@@ -23,14 +26,16 @@ PCB* PCB_Table::getProcess(long id) {
 	for (int i = 0; i < table.size(); i++) {
 		//If a process with a matching ID is found:
 		if (table[i]->getID() == id) {
-			//If this process can be set to READY, return the pointer to this process.
-			if (table[i]->setState(State::READY)) {
-				return table[i];
-			}
-			//Else return NULL to break the for loop.
-			else {
+			//This process cannot be returned if its state is already READY.
+			if (table[i]->getState() == State::READY) {
 				return NULL;
 			}
+			//If this process can be set to READY, return the pointer to this process.
+			else if (table[i]->setState(State::READY)) {
+				return table[i];
+			}
+			//Otherwise break the for loop.
+			break;
 		}
 	}
 	return NULL;
@@ -46,13 +51,4 @@ bool PCB_Table::endProcess(long id) {
 	return false;
 }
 
-//Prints a list of all active processes.
-void PCB_Table::listAllProcesses() {
-	cout << setw(12) << "Process ID" << setw(10) << "State" << setw(10) << "Priority" << setw(12) << "Counter" << endl;
-	cout << "-------------------------------------------------------------------------------------" << endl;
-	//
-	for (int i = 0; i < table.size(); i++) {
-		table[i]->print();
-	}
-}
 #endif // !PCB_Table_C
