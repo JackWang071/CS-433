@@ -32,7 +32,7 @@ public:
 	long getCounter();
 	void setCounter(long count);
 
-	void terminate();
+	bool canBeReady();
 	State getState();
 	bool setState(State s);
 	string printState();

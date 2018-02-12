@@ -26,29 +26,20 @@ PCB* PCB_Table::getProcess(long id) {
 	for (int i = 0; i < table.size(); i++) {
 		//If a process with a matching ID is found:
 		if (table[i]->getID() == id) {
-			//This process cannot be returned if its state is already READY.
-			if (table[i]->getState() == State::READY) {
-				return NULL;
-			}
-			//If this process can be set to READY, return the pointer to this process.
-			else if (table[i]->setState(State::READY)) {
-				return table[i];
-			}
-			//Otherwise break the for loop.
-			break;
+			return table[i];
 		}
 	}
 	return NULL;
 }
+
 //Ends the process with the given ID number.
 bool PCB_Table::endProcess(long id) {
 	for (int i = 0; i < table.size(); i++) {
 		if (table[i]->getID() == id) {
-			table[i]->terminate();
+			table[i]->setState(State::TERMINATED);
 			return true;
 		}
 	}
 	return false;
 }
-
 #endif // !PCB_Table_C

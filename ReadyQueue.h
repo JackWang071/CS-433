@@ -19,7 +19,6 @@ public:
 	bool insertProc(PCB* p);
 	int size();
 	void displayQueue();
-
 };
 
 #endif // !ReadyQueue_H

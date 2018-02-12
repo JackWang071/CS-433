@@ -5,6 +5,8 @@ using namespace std;
 
 //Conducts Test 1.
 void test1(PCB_Table table1, ReadyQueue q1) {
+	cout << "TEST 1" << endl;
+
 	//Step a.
 	q1.insertProc(table1.getProcess(5));
 	q1.insertProc(table1.getProcess(1));
@@ -40,23 +42,22 @@ void test1(PCB_Table table1, ReadyQueue q1) {
 
 //Conducts Test 2.
 void test2(PCB_Table table1, ReadyQueue q1) {
+	cout << "TEST 2" << endl;
+	
 	PCB* insert;
-
 	//While loop inserts ten random processes from table1 into q1.
 	while (q1.size() < 10) {
 		insert = table1.getProcess(rand() % 20 + 1);
-		if (insert != NULL) {
+		if (insert->getState() != State::READY) {
 			insert->setPriority(rand() % 50 + 1);	//Each process is assigned a new random priority.
 			q1.insertProc(insert);
 		}
 	}
 
-	bool allProcessesInserted = false;
+	bool allProcessesInserted = false;	//indicates whether the program can access Option 2
+	int randSelCount;	//tracks how many random selections of processes have been made
 	//Step a: For loop repeats this step 1,000,000 times to test the time efficiency of this implementation.
 	for (int i = 0; i < 1000000; i++) {
-
-		cout << i << endl;
-
 		//Step options are randomly selected, each option has a 50% chance of being selected.
 		//Option 1: Remove the highest-priority process.
 		if (rand() % 2 == 0) {
@@ -64,20 +65,24 @@ void test2(PCB_Table table1, ReadyQueue q1) {
 			allProcessesInserted = false;
 		}
 		//Option 2: Insert into q1 a random process from table1.
-		else if (!allProcessesInserted) {
-			//For loop searches through table1 to find a process that has not already been inserted into q1.
-			for (int i = 0; i < 20; i++) {
-				insert = table1.getProcess(i);
-				if (insert != NULL) {
-					insert->setPriority(rand() % 50 + 1);
-					q1.insertProc(insert);
-					break;
-				}
-				else if (i == 19) {
-					allProcessesInserted = true;
+		else {
+			if (!allProcessesInserted) {
+				//For loop makes up to forty random selections from the PCB table.
+				for (randSelCount = 0; randSelCount < 40; randSelCount++) {
+					randSelCount++;
+					insert = table1.getProcess(rand() % 20 + 1);
+					//If a process has not already been inserted into q1:
+					if (insert != NULL) {
+						insert->setPriority(rand() % 50 + 1);
+						q1.insertProc(insert);
+						break;
+					}
+					//If forty random selections have not found an uninserted process, lock this option.
+					if (randSelCount == 40) {
+						allProcessesInserted = true;
+					}
 				}
 			}
-
 		}
 	}
 
@@ -95,7 +100,6 @@ void main() {
 	}
 
 	test1(table1, q1);
-
 	test2(table1, q1);
 
 	cout << "Program end." << endl;

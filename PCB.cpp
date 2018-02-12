@@ -40,10 +40,9 @@ void PCB::setCounter(long count) {
 	counter = count;
 }
 
-//Kills the current process.
-void PCB::terminate() {
-	state = State::TERMINATED;
-	priority = -1;
+//Checks that ID, priority, and counter are not default values.
+bool PCB::canBeReady() {
+	return ID >= 0 && priority >= 0 && counter >= 0;
 }
 
 //Returns the current state
@@ -58,15 +57,18 @@ bool PCB::setState(State s) {
 		//If the state is to be set to READY, check whether ID, counter, and priority all have valid values.
 		if (s == State::READY) {
 			//Return true if ID, counter, and priority all have valid values.
-			if (ID >= 0 && priority >= 0 && counter >= 0) {
+			if (canBeReady()) {
 				state = State::READY;
 				return true;
 			}
+			return false;
 		}
-		else {
-			state = s;
-			return true;
+		//Option to terminate a process.
+		else if (s == State::TERMINATED) {
+			priority = -1;
 		}
+		state = s;
+		return true;
 	}
 	return false;
 }
