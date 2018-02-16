@@ -112,4 +112,11 @@ FUNCTIONALITY
 				Displays all processes stored in the ReadyQueue in approximate order of priority.
 
 RESULTS
-	
+	Test 2:
+		Try		Time (sec)
+		1		4.755
+		2		4.561
+		3		4.539
+		4		4.537
+		5		4.559
+	The average clock time for Test 2 was approximately 4.590 seconds.

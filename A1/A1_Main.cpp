@@ -1,4 +1,5 @@
 #include <iostream>
+#include <time.h>
 using namespace std;
 #include "PCB_Table.h"
 #include "ReadyQueue.h"
@@ -100,7 +101,11 @@ void main() {
 	}
 
 	test1(table1, q1);
+
+	clock_t time = clock();
 	test2(table1, q1);
+	time = clock() - time;
+	cout << "Test 2 took " << ((float)time / CLOCKS_PER_SEC) << " seconds." << endl;
 
 	cout << "Program end." << endl;
 	cin.get();
